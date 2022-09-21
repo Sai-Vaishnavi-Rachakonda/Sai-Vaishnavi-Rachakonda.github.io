@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>LocLook</title>
+    <meta name="keywords" content="Python, HTML, CSS, JS Homework6">
+    <meta charset="UTF-8">
+    <meta name="description" content="CSCI-571: Homework6">
+    <meta name="author" content="Sai Vaishnavi Rachakonda">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="search-form">
+        <header>
+            <img src="./banner.jpeg" class="bg-image">
+            <p class="head1">Business Search</p>
+            <p class="head2">Fill out the form to get businesses near you!</p>
+        </header>
+        <div class="center-form">
+            <div>
+                <label class="label">Keyword <span class='required'>*</span></label>
+                <p><input id="keyword"></p>
+            </div>
+            <div class="align">
+                <label class="label dist" for="distance">Distance(miles)</label>
+                <label class="label category" for="category">Category <span class='required'>*</span></label>
+                <p>
+                    <input id="distance" type="number" name="distance">
+                    <select name="category" class="category" id="category">
+                        <option value="default">Default</option>
+                        <option value="art-entertainment">Arts & Entertainment</option>
+                        <option value="health-medical">Health & Medical</option>
+                        <option value="hotels-travel">Hotels & Travel</option>
+                        <option value="food">Food</option>
+                        <option value="professional-service">Professional Services</option>
+                    </select>
+                </p>
+            </div>
+            <div>
+                <label class="label">Location <span class='required'>*</span></label>
+                <p> <input id="location"></p>
+            </div>
+            <div class="line"></div>
+            <label class="label">Want us to auto-detect your location? Check here </label>
+            <input type="checkbox" class="checkbox" id="get-location">
+        </div>
+        <div class="footer"> 
+            <button type="button" class='btn blue' id="submit">SUBMIT</button>
+            <button type="button" class='btn yellow' id="clear">CLEAR</button>
+        </div>
+    </div>
+</body>
+
+</html>
