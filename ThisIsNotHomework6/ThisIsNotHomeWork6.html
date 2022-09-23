@@ -47,22 +47,34 @@
             <label class="label">Want us to auto-detect your location? Check here </label>
             <input type="checkbox" class="checkbox" id="get-location">
         </div>
-        <div class="footer"> 
+        <div class="footer">
             <button type="button" class='btn blue' id="submit">SUBMIT</button>
             <button type="button" class='btn yellow' id="clear">CLEAR</button>
         </div>
+    </div>
 
-
-        <!-- Table of retrived values-->
-        <div id="result-table-wrapper">
-            <span>Just test</span>¡™
-        </div>
+    <!-- Table of retrived values-->
+    <div id="result-table-wrapper">
+        <table class="table-container">
+            <thead class="table-head blue">
+                <tr class="table-header-row">
+                    <td class="item-no">No.</td>
+                    <td class="item-rating">Image</td>
+                    <td class="item-name" id='business-name'>Business Name</td>
+                    <td class="item-rating" id='business-rating'>Rating</td>
+                    <td class="item-rating" id='business-distance'>Distance(miles)</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <span>Just test</span>
+    <!-- Card with details -->
+    <div id="details-card-wrapper">
         <span>Just test</span>
-        <!-- Card with details -->
-        <div id="details-card-wrapper">
-            <span>Just test</span>
-        </div>
     </div>
     <script src="script.js"></script>
 </body>
+
 </html>

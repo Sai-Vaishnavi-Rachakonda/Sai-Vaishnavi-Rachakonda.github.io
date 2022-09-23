@@ -1,23 +1,26 @@
 body {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     background-color: #E7E7E5;
     font-family: sans-serif;
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
+/* Business Search form Styling */
 .search-form {
-    width: 900px;
+    margin-top: 50px;
+    position: relative;
+    width: 800px;
     height: 650px;
     border: 5px solid #D4D4D5;
     background-color: #FEFFFE;
+    margin-bottom: 120px;
 }
 
 .bg-image {
-    width: 900px;
-    height: 200px;
+    width: 800px;
+    height: 180px;
     object-fit: cover;
     object-position: 0% 105%;
 }
@@ -25,17 +28,17 @@ body {
 .head1 {
     position: absolute;
     top: 10px;
-    left: 70px;
-    font-size: 35px;
+    left: 55px;
+    font-size: 33px;
     color: white;
     font-family: sans-serif;
 }
 
 .head2 {
     position: absolute;
-    top: 98px;
-    left: 70px;
-    font-size: 25px;
+    top: 80px;
+    left: 55px;
+    font-size: 23px;
     color: white;
 }
 
@@ -63,48 +66,89 @@ select {
     font-size: 18px;
     padding-left: 3px;
     height: 40px;
-    width: 390px;
+    width: 320px;
 }
 
 #keyWord {
-    width: 760px;
+    width: 660px;
 }
 
-.dist{
-    margin-right: 250px;
-}
-#distance{
-    margin-right: 180px;
-}
-#location{
-    width: 760px;
-}
-.line{
-  height: 2px;
-  background: #97A8CC;
-  margin-right: 59px;
-  margin-top: 30px;
-  margin-bottom: 20px;
+.dist {
+    margin-right: 200px;
 }
 
-.checkbox{
+#distance {
+    margin-right: 145px;
+}
+
+#location {
+    width: 660px;
+}
+
+.line {
+    height: 2px;
+    background: #97A8CC;
+    margin-right: 59px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.checkbox {
     height: 10px;
     transform: scale(2);
 }
-.footer{
+
+.footer {
     margin-top: 20px;
     margin-left: 70px;
 }
-.btn{
-    width:115px;
+
+.btn {
+    width: 115px;
     height: 50px;
-    color:white;
+    color: white;
     font-size: 18px;
 }
-.blue{
+
+.blue {
     background-color: #4E6FAF;
-    
+
 }
-.yellow{
-    background-color:#FEB605
+
+.yellow {
+    background-color: #FEB605
+}
+
+/* Response table styling*/
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+
+td,
+th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.table-head{
+   color: black;
+   font-weight: bold ;
+   text-align: center;
+}
+
+.item-no{
+    width: 50px;
+}
+.item-image{
+    width: 150px;
+    height: 150px;
+}
+.item-name{
+    width: 550px;
+}
+.item-rating, .item-distance{
+    width: 150px
 }

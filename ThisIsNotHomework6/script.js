@@ -6,9 +6,9 @@ $(document).ready(function () {
         category: 'all',
         location: '',
         getLocation: 'off',
-        cords:{lat:0,long:0}
+        cords: { lat: 0, long: 0 }
     }
-    const keyWord = $('#keyword')
+    const keyWord = $('#keyWord')
     const distance = $('#distance')
     const category = $('#category')
     const location = $('#location')
@@ -25,7 +25,8 @@ $(document).ready(function () {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-    }
+    };
+    let businesses = []
 
 
     //onChange functions
@@ -88,9 +89,10 @@ $(document).ready(function () {
         cardWrapper.empty();
         keyWord.val('');
         distance.val('');
-        category.val('default');
+        category.val('all');
         location.val('');
         getLocation.prop('checked', false);
+        businesses=[]
     })
 
     //validate the form 
@@ -101,16 +103,72 @@ $(document).ready(function () {
     }
     // onSubmit
     const onSubmit = async () => {
+        //first empty the exsisting table,card content
+        tableWrapper.empty();
+        cardWrapper.empty();
+        //make api call
         let url = 'http://127.0.0.1:5000/getDets?keyWord=' + form.keyWord +
-            '&&distance=' + (parseInt(form.distance*1609.344)) + '&&category=' + form.category +
+            '&&distance=' + (parseInt(form.distance * 1609.344)) + '&&category=' + form.category +
             '&&locationLat=' + form.cords.lat + '&&locationLong=' + form.cords.long
         await fetch(url, getAPIObject)
             .then((response) => {
                 console.log(response);
                 return response.json()
-            }).then((data) => console.log(data)).catch((exception) => {
+            }).then((data) => {
+                console.log(data);
+                if (data && data.businesses) {
+                    constructTable(data.businesses);
+                    businesses=[...data.businesses]
+                }
+                else throw ('no businesses data array found')
+            }).catch((exception) => {
                 console.log(exception);
             });
     };
     submit.on('click', () => onSubmit());
+
+    //create the table with response from search api call
+    const constructTable = (businesses) => {
+        let tableHead = `        
+        <table class="table-container">
+        <thead class="table-head blue">
+            <tr class="table-header-row">
+                <td class="item-no">No.</td>
+                <td class="item-rating">Image</td>
+                <td class="item-name" id='business-name'>Business Name</td>
+                <td class="item-rating" id='business-rating'>Rating</td>
+                <td class="item-rating" id='business-distance'>Distance(miles)</td>
+            </tr>
+        </thead>
+        <tbody>`
+        let tableClose = ``
+        let tableBody = ``
+        if (businesses.length > 0) {
+            for (let i = 0; i < businesses.length; i++) {
+                let data = businesses[i]
+                let row =
+                    (`<tr>
+            <td class="item-no"><span>${i + 1}</span></td>
+            <td><img class='item-image'
+                    src=${data.image_url}
+                    alt=${data.alias}></td>
+            <td class="item-name" id=${data.id} onclick='onNameClick'><span>${data.name}</span></td>
+            <td class="item-rating"><span>${data.rating}</span></td>
+            <td class="item-distance"><span>${(data.distance * 0.000621371192).toFixed(2)}</span></td>
+            </tr>
+        `)
+                tableBody += row
+            }
+        }
+        else {
+            tableBody = `<tr><td></td><td></td><td>No Data Found</td><td></td><td></td></tr>`
+        }
+        let tblHTML = tableHead + tableBody + tableClose;
+        tableWrapper.append(tblHTML);
+    }
+
+    //on click of business name
+    const onNameClick = (e)=>{
+        console.log(e)
+    }
 });
