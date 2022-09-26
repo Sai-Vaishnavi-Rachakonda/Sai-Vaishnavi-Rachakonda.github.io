@@ -92,7 +92,7 @@ $(document).ready(function () {
         category.val('all');
         location.val('');
         getLocation.prop('checked', false);
-        businesses=[]
+        businesses = []
     })
 
     //validate the form 
@@ -112,13 +112,11 @@ $(document).ready(function () {
             '&&locationLat=' + form.cords.lat + '&&locationLong=' + form.cords.long
         await fetch(url, getAPIObject)
             .then((response) => {
-                console.log(response);
                 return response.json()
             }).then((data) => {
-                console.log(data);
                 if (data && data.businesses) {
                     constructTable(data.businesses);
-                    businesses=[...data.businesses]
+                    businesses = [...data.businesses]
                 }
                 else throw ('no businesses data array found')
             }).catch((exception) => {
@@ -152,7 +150,7 @@ $(document).ready(function () {
             <td><img class='item-image'
                     src=${data.image_url}
                     alt=${data.alias}></td>
-            <td class="item-name" id=${data.id} onclick='onNameClick'><span>${data.name}</span></td>
+            <td class="item-name"><span id=${data.id}>${data.name}</span></td>
             <td class="item-rating"><span>${data.rating}</span></td>
             <td class="item-distance"><span>${(data.distance * 0.000621371192).toFixed(2)}</span></td>
             </tr>
@@ -167,8 +165,124 @@ $(document).ready(function () {
         tableWrapper.append(tblHTML);
     }
 
-    //on click of business name
-    const onNameClick = (e)=>{
-        console.log(e)
+    tableWrapper.on('click', (e) => {
+        const { id } = e.target;
+        console.log(e, id);
+        if (id === 'business-name' || id === 'business-rating' || id === 'business-distance') {
+            sortTable(id)
+        }
+        else if (id.length > 0) {
+            buildCard(id)
+        }
+        else {
+            console.log('clicked on', e)
+        }
+    })
+
+    //Build the Card
+    const getConcat = (value,seprator) => {
+        let str =''
+        for (i in value){
+            str += value[i]?(value[i].title?value[i].title:value[i])+ seprator :''
+        }
+        return str.slice(0,str.length-3)
+    }
+    const constructCard = (data) => {
+        let { is_closed, location, transactions, categories,
+            display_phone, price, url,name,photos
+        } = data;
+        transactions= transactions.map(i=>{if(i==='restaurant_reservation') i='restaurant Reservation'; return (i[0].toUpperCase()+i.slice(1,i.length))})
+        let status = is_closed ? 'Closed' : 'Open Now';
+        let address = getConcat(location.display_address,'   ');
+        let transactionSupported = getConcat(transactions,',  ');
+        let category = getConcat(categories,' | ');
+        let phone = display_phone
+        console.log(status,address,transactionSupported,category);
+        let cardHeader=(`<div class="card-conatiner">
+                            <div class="card-header">
+                                <p class="c-heading">${name}</p>
+                                <div class="card-header-line"></div>
+                            </div> `);
+        let cardBody =(`
+                        <div class="card-body">
+                        ${status&&(`<div class="card-block">
+                            <span class="block-header">Status</span>
+                            <div class="block-content">
+                                <span class=${is_closed ? "status-red":"status-green"}>${status}</span>
+                            </div>
+                        </div>`)}
+                        ${category&&(`<div class="card-block">
+                        <span class="block-header">Category</span>
+                        <div class="block-content">
+                            <span class="card-details">${category}</span>
+                        </div>
+                    </div>`)}
+                    ${address&&(`<div class="card-block">
+                        <span class="block-header">Address</span>
+                        <div class="block-content">
+                            <span class="card-details">${address}</span>
+                        </div>
+                    </div>`)}
+                    ${phone&&(`<div class="card-block">
+                        <span class="block-header">Phone No</span>
+                        <div class="block-content">
+                            <span class="card-details">${phone}</span>
+                        </div>
+                    </div>`)}
+                    ${transactionSupported&&(`<div class="card-block">
+                        <span class="block-header">Transactions Supported</span>
+                        <div class="block-content">
+                            <span class="card-details">${transactionSupported}</span>
+                        </div>
+                    </div>`)}
+                    ${price&&(`<div class="card-block">
+                        <span class="block-header">Price</span>
+                        <div class="block-content">
+                            <span class="card-details">${price}</span>
+                        </div>
+                    </div>`)}
+                    ${url&&(`<div class="card-block">
+                        <span class="block-header">More Info</span>
+                        <div class="block-content">
+                            <a href=${url} target="blank">Yelp</a>
+                        </div>
+                    </div>`)}
+                    </div>
+        `)
+    cardImages =(`   
+                    <div class="card-photos">
+                    ${photos[0]&&`<div class="image-container">
+                        <img src=${photos[0]} alt ="image" class="card-img">
+                        <p class='photo-title'>Photo 1</p>
+                    </div>`}
+                    ${photos[1]&&`<div class="image-container">
+                        <img src=${photos[1]} alt ="image" class="card-img">
+                        <p class='photo-title'>Photo 2</p>
+                    </div>`}
+                    ${photos[2]&&`<div class="image-container">
+                        <img src=${photos[2]} alt ="image" class="card-img">
+                        <p class='photo-title'>Photo 3</p>
+                    </div>`}
+                </div>
+                </div>`)
+    let card = cardHeader+cardBody+cardImages;
+    cardWrapper.append(card)
+    }
+    const buildCard = async (id) => {
+        cardWrapper.empty()
+        let url = 'http://127.0.0.1:5000/getBusinessDets?id=' + id;
+        await fetch(url, getAPIObject)
+            .then((response) => {
+                console.log(response);
+                return response.json()
+            }).then((data) => {
+                console.log(data);
+                if (data) {
+                    constructCard(data);
+                }
+                else throw ('no businesses data array found')
+            }).catch((exception) => {
+                console.log(exception);
+            });
     }
 });

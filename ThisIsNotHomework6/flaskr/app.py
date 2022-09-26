@@ -1,6 +1,7 @@
 # pip install -U flask-cors
 # for installing cors
 from ast import keyword
+from crypt import methods
 import json
 import requests
 from flask import Flask, request, jsonify,make_response
@@ -8,12 +9,20 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+key ='6StofwHDTGMV6mmwY7idu1PKnXUdw4CnTe8aGIHq0ewIXa-m6V6HcJqH1CpLQQ4JlTJCpJJj9FpwsOp5sUZBevvCaXRJs2-dAiYXOA96593Nphqj1h6ZNDHPclQtY3Yx'
 def getYelpReview(keyWord,distance,category,locationLat,locationLong):
     print(keyWord,distance,category,locationLat,locationLong)
-    key ='6StofwHDTGMV6mmwY7idu1PKnXUdw4CnTe8aGIHq0ewIXa-m6V6HcJqH1CpLQQ4JlTJCpJJj9FpwsOp5sUZBevvCaXRJs2-dAiYXOA96593Nphqj1h6ZNDHPclQtY3Yx'
     headers = {"Authorization": "Bearer "+key}
     api= 'https://api.yelp.com/v3/businesses/search?term='+keyWord+'&latitude='+str(locationLat)+'&longitude='+str(locationLong)+'&radius='+str(distance)+'&categories='+category
     return requests.get(api,headers=headers).json()
+
+def getYelpBusinessDets(id):
+    print(id)
+    headers = {"Authorization": "Bearer "+key}
+    api= 'https://api.yelp.com/v3/businesses/'+id
+    return requests.get(api,headers=headers).json()
+
+
 @app.route('/getDets',methods=['GET'])
 def getDets():
     keyWord = request.args.get('keyWord')
@@ -27,6 +36,13 @@ def getDets():
     # locationLat = 37.786882
     # locationLong = -122.399972
     res = getYelpReview(keyWord,distance,category,locationLat,locationLong)
+    return (res)
+
+@app.route('/getBusinessDets',methods=['GET'])
+def getBusinessDets():
+    id= request.args.get('id')
+    res=getYelpBusinessDets(id)
+    print(res)
     return (res)
 
 if __name__ == '__main__':
