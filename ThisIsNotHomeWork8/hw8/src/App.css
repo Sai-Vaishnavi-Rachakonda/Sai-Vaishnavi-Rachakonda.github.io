@@ -1,0 +1,23 @@
+.App {
+  background-image: url('city.jpg') !important;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100vw;
+  background-position: -300px 130px;
+  z-index: -1;
+}
+.header{
+  height: 10%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 3vw;
+}
+.nav-btn{
+  padding: 10px 20px;
+  cursor: pointer;
+}
+.nav-border{
+  border: 1px solid black;
+  border-radius: 1rem;
+}
