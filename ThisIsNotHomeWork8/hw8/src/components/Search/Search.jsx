@@ -8,34 +8,31 @@ import { Checkbox, MenuItem, Select } from '@mui/material';
 
 
 function Search(props) {
+    const proxy = "http://localhost:8080/"
     const [keyWord, setkeyWord] = useState();
     const [keyWordInput, setkeyWordInput] = useState();
     const [openAC, setOpenAC] = useState(false);
-    const [keyWordOptions, setKeyWordOptions] = useState([
-        { code: 'AD', label: 'Andorra', phone: '376' },
-        {
-            code: 'AE',
-            label: 'United Arab Emirates',
-            phone: '971',
-        }]);
-    const [category, setCategory] = useState();
+    const [keyWordOptions, setKeyWordOptions] = useState([]);
+    const [category, setCategory] = useState('all');
     const [distance, setDistance] = useState();
-    const [location, setLocation] = useState();
-    const [autoDetectLocation, setAutoDetectLocation] = useState();
+    const [location, setLocation] = useState('');
+    const [longLat, setLongLat] = useState({lat:'',lng:''})
+    const [autoDetectLocation, setAutoDetectLocation] = useState(false);
 
     useEffect(() => {
-        console.log(keyWord, keyWordInput,
-            openAC, category, distance, location, autoDetectLocation)
-    }, [keyWord, keyWordInput, openAC, category, distance, location, autoDetectLocation])
+        console.log(location, autoDetectLocation, longLat)
+    }, [location, autoDetectLocation, longLat])
 
-    const formChange = (e, name, value) => {
-        console.log(name, value, e)
+
+    const formChange = async (e, name, value) => {
+        //console.log(name, value, e)
         switch (name) {
             case 'autoCompInput':
                 {
+                    //if enter is pressed we have to close the dd and set value
                     setkeyWordInput(value);
-                    if (value.length > 3) {
-                        setOpenAC(true)
+                    if (value.length > 2) {
+                        await getOptionsList(value)
                     }
                     break;
                 }
@@ -63,6 +60,12 @@ function Search(props) {
             case 'checkbox':
                 {
                     setAutoDetectLocation(value)
+                    if (value) {
+                        getAutoLocation()
+                    }
+                    else {
+                        setLongLat({lng:'',lat:''})
+                    }
                     setLocation('')
                     break
                 }
@@ -71,13 +74,99 @@ function Search(props) {
         }
     }
 
+    const getAPIObject = {
+        method: 'GET',
+        header: {
+            'Access-Control-Allow-Origin': '*',
+        },
+    };
+    const getOptionsList = async (val) => {
+        const url = proxy + 'getOptionsList?text=' + val
+        await fetch(url, getAPIObject).then(res => {
+            if (res && res.status === 200)
+                return res.json()
+            throw ('err in geting auto complete data')
+        }).then(res => {
+            let data = res.data
+            let options = []
+            if (data.businesses && data.businesses.length > 0) {
+                data.businesses.map((option, ind) => options.push({ label: option.title, id: ind }))
+            }
+            if (data.categories && data.categories.length > 0) {
+                data.categories.map((option, ind) => options.push({ label: option.title, id: ind }))
+            }
+            if (data.terms && data.terms.length > 0) {
+                data.terms.map((option, ind) => options.push({ label: option.text, id: ind }))
+            }
+            setKeyWordOptions(options)
+
+        })
+            .catch(e => { console.log(e) })
+        setOpenAC(true)
+
+    }
     const closeAutoComplete = () => {
         if (openAC) {
             setOpenAC(false)
         }
     }
 
-    const submitForm = () => { }
+    const getLocation = async () => {
+        const apiKey = 'AIzaSyDGDvD0izXPSz_65z-iZyznuyDlU-D0Qz0'
+        const addressURL = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + apiKey;
+        await fetch(addressURL, getAPIObject)
+            .then(res => {
+                if (res && res.status === 200)
+                    return res.json()
+                else throw ('There was an error fetching long and lat')
+            }
+            ).then(data => {
+                // console.log(data.results[0].geometry.location)
+                if (data && data.results && data.results[0] && data.results[0].geometry && data.results[0].geometry.location)
+                    setLongLat(data.results[0].geometry.location)
+                else
+                    throw ('data from google api is missing')
+            }).catch(e => console.log(e))
+    }
+
+    const getAutoLocation = async () => {
+        const locURL = 'https://ipinfo.io?token=d86e1ea0fedc63'
+        await fetch(locURL, getAPIObject)
+            .then(res => {
+                if (res && res.status === 200)
+                    return res.json()
+                else throw ('There was an error fetching long and lat')
+            }
+            ).then(data => {
+                console.log(data)
+                if (data && data.loc) {
+                    const { loc } = data
+                    setLongLat({
+                        lat: parseFloat(loc.split(',')[0]),
+                        lng: parseFloat(loc.split(',')[1])
+                    })
+                }
+                else {
+                    throw ('error fetching address from ip')
+                }
+            })
+            .catch(e => console.log(e))
+    }
+
+    const submitForm = async() => {
+        let url = proxy + 'getDets?keyWord=' + keyWordInput +'&&distance=' + (parseInt(distance * 1609.344)) + '&&category=' + category +'&&locationLat=' + longLat.lat + '&&locationLong=' + longLat.lng
+        await fetch(url, getAPIObject)
+            .then((response) => {
+                return response.json()
+            }).then((res) => {
+                if (res&& res.data && res.data.businesses) {
+                    console.log(res.data)
+                }
+                else throw ('no businesses data array found')
+            }).catch((exception) => {
+                console.log(exception);
+            });
+    }
     const clearForm = () => { }
 
     return (<div className='col-12'>
@@ -105,7 +194,7 @@ function Search(props) {
                                     onChange={(e, seletedValue) => { formChange(e, "keyWordAutoComplete", seletedValue) }}
                                     onInputChange={(e, enteredVal) => formChange(e, 'autoCompInput', enteredVal)}
                                     onBlur={closeAutoComplete}
-                                     />
+                                />
                             </div>
                         </div>
 
@@ -117,6 +206,8 @@ function Search(props) {
                                         <TextField placeholder='10'
                                             value={distance}
                                             id='distance'
+                                            type="number"
+                                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                             className='dist'
                                             onChange={(e, val) => formChange(e, 'distance', val)} />
                                     </div>
@@ -124,7 +215,7 @@ function Search(props) {
                                         <label className=''>Category <span className='req'>*</span></label>
                                         <Select
                                             className='category-select'
-                                            value={category}                                            
+                                            value={category}
                                             onChange={(e, val) => formChange(e, 'category', val)}>
                                             <MenuItem value={'all'}>Default</MenuItem>
                                             <MenuItem value={'art-entertainment'}>Arts & Entertainment</MenuItem>
@@ -140,11 +231,13 @@ function Search(props) {
 
                         <div className=' colmn col-12'>
                             <div className='colmn loc-inp'><label className=''>Location <span className='req'>*</span></label>
-                                <TextField 
-                                value={location} 
-                                id='location'
-                                onChange={(e, val) => { formChange(e, 'location', val) }} 
-                                disabled={autoDetectLocation}></TextField>
+                                <TextField
+                                    value={location}
+                                    id='location'
+                                    onChange={(e, val) => { formChange(e, 'location', val) }}
+                                    disabled={autoDetectLocation}
+                                    onBlur={getLocation}
+                                ></TextField>
                             </div>
                             <div className='row-align'> <Checkbox value={autoDetectLocation} onChange={(e, val) => { formChange(e, 'checkbox', val) }} /><label>Auto-detect my location</label></div>
                         </div>

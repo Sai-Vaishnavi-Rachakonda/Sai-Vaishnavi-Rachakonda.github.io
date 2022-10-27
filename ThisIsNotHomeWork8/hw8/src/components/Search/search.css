@@ -66,6 +66,9 @@
 #distance {
     width: 90%;
 }
+#location:disabled{
+    background-color: rgba(235, 230, 230, 0.73);
+}
 .category-select{
     height: 54%;
     width: 80%;
