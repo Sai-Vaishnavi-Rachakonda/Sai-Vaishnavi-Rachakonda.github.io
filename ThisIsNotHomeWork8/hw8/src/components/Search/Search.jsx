@@ -5,9 +5,105 @@ import './search.css';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Checkbox, MenuItem, Select } from '@mui/material';
+import BusinessTabel from '../BusinessTabel/BusinessTabel';
+import BusinessCard from '../BusinessCard/BusinessCard';
 
 
 function Search(props) {
+    const cardDetsA= {
+        "id": "QZulGq646k8J1UfJbfDvhA",
+        "alias": "ralphs-los-angeles",
+        "name": "Ralphs",
+        "image_url": "https://s3-media1.fl.yelpcdn.com/bphoto/5tYaq03O8wEcxH4iSxylOA/o.jpg",
+        "is_claimed": true,
+        "is_closed": false,
+        "url": "https://www.yelp.com/biz/ralphs-los-angeles?adjust_creative=jc4ySiv-rGoQVRd5IY4BAw&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_lookup&utm_source=jc4ySiv-rGoQVRd5IY4BAw",
+        "phone": "+13237323863",
+        "display_phone": "(323) 732-3863",
+        "review_count": 203,
+        "categories": [
+            {
+                "alias": "grocery",
+                "title": "Grocery"
+            }
+        ],
+        "rating": 3,
+        "location": {
+            "address1": "2600 S Vermont Ave",
+            "address2": "",
+            "address3": "",
+            "city": "Los Angeles",
+            "zip_code": "90007",
+            "country": "US",
+            "state": "CA",
+            "display_address": [
+                "2600 S Vermont Ave",
+                "Los Angeles, CA 90007"
+            ],
+            "cross_streets": ""
+        },
+        "coordinates": {
+            "latitude": 34.0320237174903,
+            "longitude": -118.290662739486
+        },
+        "photos": [
+            "https://s3-media1.fl.yelpcdn.com/bphoto/5tYaq03O8wEcxH4iSxylOA/o.jpg",
+            "https://s3-media4.fl.yelpcdn.com/bphoto/Nmohd8i357zy3zFJDFRWBw/o.jpg",
+            "https://s3-media3.fl.yelpcdn.com/bphoto/tFpxrgBp_hyo05VbveZrIw/o.jpg"
+        ],
+        "price": "$$",
+        "hours": [
+            {
+                "open": [
+                    {
+                        "is_overnight": true,
+                        "start": "0500",
+                        "end": "0100",
+                        "day": 0
+                    },
+                    {
+                        "is_overnight": true,
+                        "start": "0500",
+                        "end": "0100",
+                        "day": 1
+                    },
+                    {
+                        "is_overnight": true,
+                        "start": "0500",
+                        "end": "0100",
+                        "day": 2
+                    },
+                    {
+                        "is_overnight": true,
+                        "start": "0500",
+                        "end": "0100",
+                        "day": 3
+                    },
+                    {
+                        "is_overnight": true,
+                        "start": "0500",
+                        "end": "0100",
+                        "day": 4
+                    },
+                    {
+                        "is_overnight": true,
+                        "start": "0500",
+                        "end": "0100",
+                        "day": 5
+                    },
+                    {
+                        "is_overnight": true,
+                        "start": "0500",
+                        "end": "0100",
+                        "day": 6
+                    }
+                ],
+                "hours_type": "REGULAR",
+                "is_open_now": true
+            }
+        ],
+        "transactions": []
+    }
     const proxy = "http://localhost:8080/"
     const [keyWord, setkeyWord] = useState();
     const [keyWordInput, setkeyWordInput] = useState();
@@ -18,6 +114,12 @@ function Search(props) {
     const [location, setLocation] = useState('');
     const [longLat, setLongLat] = useState({lat:'',lng:''})
     const [autoDetectLocation, setAutoDetectLocation] = useState(false);
+    const [businesses,setBusinesses] = useState([])
+    const [cardDetails,setCardDetails] = useState(cardDetsA)
+    const [showTabel,setShowTabel] = useState(false)
+    const [showCard,setShowCard] = useState(false)
+
+
 
     useEffect(() => {
         console.log(location, autoDetectLocation, longLat)
@@ -38,6 +140,7 @@ function Search(props) {
                 }
             case 'keyWordAutoComplete':
                 {
+                    // TODO: bug when selected a 
                     setkeyWord(value)
                     setOpenAC(false)
                     break;
@@ -161,17 +264,59 @@ function Search(props) {
             }).then((res) => {
                 if (res&& res.data && res.data.businesses) {
                     console.log(res.data)
+                    setBusinesses(res.data.businesses)
+                    setShowTabel(true)
                 }
                 else throw ('no businesses data array found')
             }).catch((exception) => {
                 console.log(exception);
             });
     }
-    const clearForm = () => { }
+    const clearForm = () => { 
+        setShowCard(false)
+        setShowTabel(false)
+        setBusinesses([])
+        setAutoDetectLocation(false)
+        setkeyWord({})
+        setkeyWordInput('')
+        setOpenAC(false)
+        setKeyWordOptions([])
+        setCategory('all')
+        setDistance()
+        setLocation('')
+        setLongLat({lat:'',lng:''})
+        setAutoDetectLocation(false)
+        setCardDetails({})
+    }
 
+    const onRowClick = async(id)=>{
+        console.log(id)
+        let url = proxy+'getBusinessDets?id=' + id;
+        await fetch(url, getAPIObject)
+            .then((response) => {
+                console.log(response);
+                return response.json()
+            }).then((data) => {
+                console.log(data);
+                if (data) {
+                    setCardDetails(data.data)
+                    setShowTabel(false)
+                    setShowCard(true)
+
+                }
+                else throw ('no businesses details found')
+            }).catch((exception) => {
+                console.log(exception);
+            });
+    }
+
+    const backBtnClick =()=>{
+        setShowCard(false)
+        setShowTabel(true)
+    }
     return (<div className='col-12'>
         <Header nav='search' />
-        <div className='search-form-cnt row'>
+        <div className='search-page container-1 row'>
             <div className='search-form-cnt col-md-10'>
                 <div className='form'>
                     <p className='form-title'>Business search</p>
@@ -253,6 +398,9 @@ function Search(props) {
                     </div>
                 </div>
             </div>
+        
+        {showTabel&& <BusinessTabel businesses={businesses} onRowClick={onRowClick}/>}
+        {!showCard && <BusinessCard cardDetails ={cardDetails} onBackClick={backBtnClick}/>}
         </div>
     </div>)
 }
