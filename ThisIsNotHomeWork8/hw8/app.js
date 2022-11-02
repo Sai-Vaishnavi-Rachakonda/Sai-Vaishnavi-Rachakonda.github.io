@@ -39,9 +39,22 @@ app.get("/getDets", (req, res) => {
 
 app.get("/getBusinessDets", (req, res) => {
   let id= req.query.id;
-  console.log(id)
+  let respJson={}
   const apiCall = {
     url: 'https://api.yelp.com/v3/businesses/'+id,
+    headers: { "Authorization": "Bearer " + key }
+  };
+  request(apiCall, (err, resp, body) => {
+    console.log(resp)
+    res.json({data:JSON.parse(body),error:err,resp:resp})
+  })
+
+});
+app.get("/getBusinessReviews", (req, res) => {
+  let id= req.query.id;
+  console.log(id)
+  const apiCall = {
+    url: 'https://api.yelp.com/v3/businesses/'+id+'/reviews',
     headers: { "Authorization": "Bearer " + key }
   };
   request(apiCall, (err, resp, body) => {

@@ -34,7 +34,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin-bottom: 2.5em !important;
+    /* margin-bottom: 2.5em !important; */
 }
 .nav-item{
     padding: 0 2em;
@@ -57,7 +57,8 @@
     color: rgb(126, 106, 32) !important;
 }
 .business-details{
-    padding-bottom: 1.5em
+    padding-bottom: 1.5em;
+    margin-top: 2.5em !important;
 }
 .block-header{
     font-size: 20px;
@@ -113,6 +114,51 @@
     display: none!important;
 }
 .modal-buss-name{
-    display: block;
+    /* display: block; */
     text-align: center;
+
+}
+.col-3{
+    width: 20%!important;
+}
+.middle{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0!important;
+}
+.padd-left{
+    padding-left: 1em;
+}
+.padd-right{
+    margin-right: 1em;
+}
+.padd-right-5{
+    margin-left:0.5em
+}
+.submit-btn{
+    margin-top: 2em !important;
+    width: 5em !important;
+}
+.cancel-reserve-btn{
+    margin-top: 2em !important;
+    width: 12em !important;
+}
+.form-label{
+    margin-top: 0.5em;
+    margin-bottom: -0.05em !important;
+    margin-left: 1px;
+}
+.form-select:valid, .form-control:valid {
+    background-image: none !important;
+    padding: 0.375rem 0.75rem!important;
+    border: 1px solid #ced4da !important;
+}
+
+
+.map-cont{
+    width: 78vw;
+    height: 80vh;
+    margin-bottom: 2em;
 }

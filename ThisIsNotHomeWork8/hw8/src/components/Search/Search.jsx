@@ -115,7 +115,8 @@ function Search(props) {
     const [longLat, setLongLat] = useState({lat:'',lng:''})
     const [autoDetectLocation, setAutoDetectLocation] = useState(false);
     const [businesses,setBusinesses] = useState([])
-    const [cardDetails,setCardDetails] = useState(cardDetsA)
+    const [cardDetails,setCardDetails] = useState({})
+    const [reviews,setReviews] = useState({})
     const [showTabel,setShowTabel] = useState(false)
     const [showCard,setShowCard] = useState(false)
 
@@ -302,12 +303,25 @@ function Search(props) {
                     setCardDetails(data.data)
                     setShowTabel(false)
                     setShowCard(true)
-
                 }
                 else throw ('no businesses details found')
             }).catch((exception) => {
                 console.log(exception);
             });
+            let url2 = proxy+'getBusinessReviews?id=' + id;
+            await fetch(url2, getAPIObject)
+                .then((response) => {
+                    console.log(response);
+                    return response.json()
+                }).then((data) => {
+                    console.log(data);
+                    if (data&& data.data&&data.data.reviews) {
+                        setReviews(data.data.reviews)
+                    }
+                    else throw ('no businesses details found')
+                }).catch((exception) => {
+                    console.log(exception);
+                });
     }
 
     const backBtnClick =()=>{
@@ -315,8 +329,8 @@ function Search(props) {
         setShowTabel(true)
     }
     return (<div className='col-12'>
-        <Header nav='search' />
         <div className='search-page container-1 row'>
+        <Header nav='search' />
             <div className='search-form-cnt col-md-10'>
                 <div className='form'>
                     <p className='form-title'>Business search</p>
@@ -400,7 +414,7 @@ function Search(props) {
             </div>
         
         {showTabel&& <BusinessTabel businesses={businesses} onRowClick={onRowClick}/>}
-        {!showCard && <BusinessCard cardDetails ={cardDetails} onBackClick={backBtnClick}/>}
+        {showCard && <BusinessCard cardDetails ={cardDetails} reviews= {reviews} onBackClick={backBtnClick}/>}
         </div>
     </div>)
 }

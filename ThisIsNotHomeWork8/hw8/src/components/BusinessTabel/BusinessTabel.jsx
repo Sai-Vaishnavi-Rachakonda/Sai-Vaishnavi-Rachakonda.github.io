@@ -17,7 +17,7 @@ const BusinessTabel = (props) => {
         </tr>
       </thead>
       <tbody>
-        {business.map((data,index)=>(<tr id={data.id} onClick={()=>props.onRowClick(data.id)} className='cursor-ptr'>
+        {business.map((data,index)=>(<tr id={data.id} key ={data.id} onClick={()=>props.onRowClick(data.id)} className='cursor-ptr'>
             <td className='tab-ind width-1'>{index+1}</td>
             <td className='tab-img-td width-1'><img src={data.image_url} alt={data.name} className='row-image'></img></td>
             <td className='tab-buss-name width-3'>{data.name}</td>
