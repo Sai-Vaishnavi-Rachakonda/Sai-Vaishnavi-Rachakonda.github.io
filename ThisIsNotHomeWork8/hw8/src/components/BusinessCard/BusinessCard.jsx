@@ -8,7 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 import './businessCard.css'
 import Button from 'react-bootstrap/Button';
 import { faSquareFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
-import { Col, Form, Row } from 'react-bootstrap';
+import { Col, Form } from 'react-bootstrap';
 import { faClockFour } from '@fortawesome/free-regular-svg-icons';
 import Map from './Map';
 import Reviews from './Reviews';
@@ -34,6 +34,15 @@ const BusinessCard = (props) => {
         return str.slice(0, str.length - 3)
     }
 
+    useEffect(() => {
+        let ls = localStorage.getItem('reservations') ? JSON.parse(localStorage.getItem('reservations')).list : [];
+        let newls = ls.filter(x => x.name == name)
+        if (newls.length > 0)
+            setReserved(true)
+        else
+            setReserved(false)
+        console.log(ls)
+    })
     const closeModal = () => {
         if (showModal) {
             setShowModal(false);
@@ -85,15 +94,14 @@ const BusinessCard = (props) => {
             JSON.stringify({ list: [...ls, { name: name, key: key, email: email, date: date, th: timeHours, tm: timeMins }] }))
         return true
     }
-    const cancelReservation =()=>{
+    const cancelReservation = () => {
         let ls = localStorage.getItem('reservations') ? JSON.parse(localStorage.getItem('reservations')).list : [];
-        ls=ls.filter(x=>x.name!=name)
+        ls = ls.filter(x => x.name != name)
         localStorage.setItem('reservations',
-        JSON.stringify({ list: [...ls] }));
+            JSON.stringify({ list: [...ls] }));
         setReserved(false)
-
     }
-    const arr24 = new Array(24).fill('00');
+    const arr24 = new Array(8).fill(9);
     const arr60 = ['00', '15', '30', '45']
     const formChange = (e, name1) => {
         let val = e.target.value
@@ -112,7 +120,6 @@ const BusinessCard = (props) => {
                 break;
             }
             case ('date'): {
-                // console.log(val)
                 setDate(val);
                 break;
             }
@@ -201,9 +208,9 @@ const BusinessCard = (props) => {
                             </div>
                         </div>}
                         <div className='btn-row row'>
-                           { reserved?<Button variant="danger" className='reserve-btn' onClick={() => { setShowModal(true) }}>
+                            {!reserved ? <Button variant="danger" className='reserve-btn' onClick={() => { setShowModal(true) }}>
                                 Reserve Now
-                            </Button>:<Button variant="primary" className='cancel-reserve-btn' onClick={cancelReservation}>
+                            </Button> : <Button variant="primary" className='cancel-reserve-btn' onClick={cancelReservation}>
                                 Cancel Reservation
                             </Button>}
                         </div>
@@ -216,8 +223,8 @@ const BusinessCard = (props) => {
                                 <FontAwesomeIcon icon={faSquareFacebook} className='share-icon facebook' />
                             </a>
                         </div>
-                        <Carousel variant="dark" className='img-cnt'>
-                            {photos.map(photo => (<Carousel.Item interval={1000}>
+                        {photos.length > 0 && <Carousel variant="dark" className=''>
+                            {photos.map(photo => (<Carousel.Item interval={1000000}>
                                 <div className='btn-row'>
                                     <img
                                         className="card-img"
@@ -225,7 +232,7 @@ const BusinessCard = (props) => {
                                         alt={name}
                                     /></div>
                             </Carousel.Item>))}
-                        </Carousel>
+                        </Carousel>}
                     </div>
                 </Tab>
                 <Tab eventKey="map" title="Map location">
@@ -236,7 +243,7 @@ const BusinessCard = (props) => {
             </Tabs>
         </div>
         <>
-            <Modal show={showModal} onHide={closeModal}>
+            <Modal show={showModal} onHide={closeModal} backdrop="static">
                 <Modal.Header>
                     <Modal.Title>Reservation Form</Modal.Title>
                 </Modal.Header>
@@ -279,9 +286,9 @@ const BusinessCard = (props) => {
                                         onChange={(e) => formChange(e, 'timeHrs')}
                                         value={timeHours}
                                     ><option value={''}>{''}</option>
-                                        {arr24.map((val, index) => (<option value={(index).toString()}>
-                                            {((index).toString()).length === 1 ?
-                                                '0' + (index).toString() : (index).toString()}</option>))}
+                                        {arr24.map((val, index) => (<option value={(index + 10).toString()}>
+                                            {(index + 10).toString()}</option>))
+                                        }
                                     </Form.Select>:
                                     <Form.Select
                                         required className='col-3 padd-right-5'

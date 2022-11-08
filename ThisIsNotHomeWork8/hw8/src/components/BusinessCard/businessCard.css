@@ -4,8 +4,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: auto;
-   
+    height: auto;  
 }
 
 .card-dets{
@@ -110,7 +109,7 @@
     vertical-align: middle;
     text-align: center;
 }
-.carousel-indicators{
+.business-details .carousel-indicators{
     display: none!important;
 }
 .modal-buss-name{
@@ -140,6 +139,8 @@
 .submit-btn{
     margin-top: 2em !important;
     width: 5em !important;
+    background-color: #dc3545 !important;
+    border-color: #dc3545;
 }
 .cancel-reserve-btn{
     margin-top: 2em !important;

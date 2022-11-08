@@ -35,3 +35,7 @@
 .width-3{
     width: 37.5%;
 }
+.booking-index{
+    font-weight: bold;
+    padding-left: 1em !important;
+}

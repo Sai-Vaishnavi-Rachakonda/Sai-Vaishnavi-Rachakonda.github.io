@@ -1,125 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Header from '../Header/Header';
 import './search.css';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import { Checkbox, MenuItem, Select } from '@mui/material';
+import { Checkbox} from '@mui/material';
 import BusinessTabel from '../BusinessTabel/BusinessTabel';
 import BusinessCard from '../BusinessCard/BusinessCard';
+import { AsyncTypeahead } from 'react-bootstrap-typeahead';
+import { Form, InputGroup, Spinner } from 'react-bootstrap';
 
 
 function Search(props) {
-    const cardDetsA= {
-        "id": "QZulGq646k8J1UfJbfDvhA",
-        "alias": "ralphs-los-angeles",
-        "name": "Ralphs",
-        "image_url": "https://s3-media1.fl.yelpcdn.com/bphoto/5tYaq03O8wEcxH4iSxylOA/o.jpg",
-        "is_claimed": true,
-        "is_closed": false,
-        "url": "https://www.yelp.com/biz/ralphs-los-angeles?adjust_creative=jc4ySiv-rGoQVRd5IY4BAw&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_lookup&utm_source=jc4ySiv-rGoQVRd5IY4BAw",
-        "phone": "+13237323863",
-        "display_phone": "(323) 732-3863",
-        "review_count": 203,
-        "categories": [
-            {
-                "alias": "grocery",
-                "title": "Grocery"
-            }
-        ],
-        "rating": 3,
-        "location": {
-            "address1": "2600 S Vermont Ave",
-            "address2": "",
-            "address3": "",
-            "city": "Los Angeles",
-            "zip_code": "90007",
-            "country": "US",
-            "state": "CA",
-            "display_address": [
-                "2600 S Vermont Ave",
-                "Los Angeles, CA 90007"
-            ],
-            "cross_streets": ""
-        },
-        "coordinates": {
-            "latitude": 34.0320237174903,
-            "longitude": -118.290662739486
-        },
-        "photos": [
-            "https://s3-media1.fl.yelpcdn.com/bphoto/5tYaq03O8wEcxH4iSxylOA/o.jpg",
-            "https://s3-media4.fl.yelpcdn.com/bphoto/Nmohd8i357zy3zFJDFRWBw/o.jpg",
-            "https://s3-media3.fl.yelpcdn.com/bphoto/tFpxrgBp_hyo05VbveZrIw/o.jpg"
-        ],
-        "price": "$$",
-        "hours": [
-            {
-                "open": [
-                    {
-                        "is_overnight": true,
-                        "start": "0500",
-                        "end": "0100",
-                        "day": 0
-                    },
-                    {
-                        "is_overnight": true,
-                        "start": "0500",
-                        "end": "0100",
-                        "day": 1
-                    },
-                    {
-                        "is_overnight": true,
-                        "start": "0500",
-                        "end": "0100",
-                        "day": 2
-                    },
-                    {
-                        "is_overnight": true,
-                        "start": "0500",
-                        "end": "0100",
-                        "day": 3
-                    },
-                    {
-                        "is_overnight": true,
-                        "start": "0500",
-                        "end": "0100",
-                        "day": 4
-                    },
-                    {
-                        "is_overnight": true,
-                        "start": "0500",
-                        "end": "0100",
-                        "day": 5
-                    },
-                    {
-                        "is_overnight": true,
-                        "start": "0500",
-                        "end": "0100",
-                        "day": 6
-                    }
-                ],
-                "hours_type": "REGULAR",
-                "is_open_now": true
-            }
-        ],
-        "transactions": []
-    }
+
     const proxy = "http://localhost:8080/"
     const [keyWord, setkeyWord] = useState();
+    const [kW, setkW] = useState();
     const [keyWordInput, setkeyWordInput] = useState();
     const [openAC, setOpenAC] = useState(false);
     const [keyWordOptions, setKeyWordOptions] = useState([]);
     const [category, setCategory] = useState('all');
     const [distance, setDistance] = useState();
     const [location, setLocation] = useState('');
-    const [longLat, setLongLat] = useState({lat:'',lng:''})
+    const [longLat, setLongLat] = useState({ lat: '', lng: '' })
     const [autoDetectLocation, setAutoDetectLocation] = useState(false);
-    const [businesses,setBusinesses] = useState([])
-    const [cardDetails,setCardDetails] = useState({})
-    const [reviews,setReviews] = useState({})
-    const [showTabel,setShowTabel] = useState(false)
-    const [showCard,setShowCard] = useState(false)
-
+    const [businesses, setBusinesses] = useState([])
+    const [cardDetails, setCardDetails] = useState({})
+    const [reviews, setReviews] = useState({})
+    const [showTabel, setShowTabel] = useState(false)
+    const [showCard, setShowCard] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
+    const ref = useRef();
 
 
     useEffect(() => {
@@ -128,12 +37,13 @@ function Search(props) {
 
 
     const formChange = async (e, name, value) => {
-        //console.log(name, value, e)
+        console.log(name, value, e)
         switch (name) {
             case 'autoCompInput':
                 {
                     //if enter is pressed we have to close the dd and set value
                     setkeyWordInput(value);
+                   
                     if (value.length > 2) {
                         await getOptionsList(value)
                     }
@@ -143,7 +53,7 @@ function Search(props) {
                 {
                     // TODO: bug when selected a 
                     setkeyWord(value)
-                    setOpenAC(false)
+                    setkW(value.label)
                     break;
                 }
             case 'category':
@@ -168,7 +78,7 @@ function Search(props) {
                         getAutoLocation()
                     }
                     else {
-                        setLongLat({lng:'',lat:''})
+                        setLongLat({ lng: '', lat: '' })
                     }
                     setLocation('')
                     break
@@ -185,6 +95,7 @@ function Search(props) {
         },
     };
     const getOptionsList = async (val) => {
+        setIsLoading(true);
         const url = proxy + 'getOptionsList?text=' + val
         await fetch(url, getAPIObject).then(res => {
             if (res && res.status === 200)
@@ -203,10 +114,10 @@ function Search(props) {
                 data.terms.map((option, ind) => options.push({ label: option.text, id: ind }))
             }
             setKeyWordOptions(options)
-
         })
             .catch(e => { console.log(e) })
         setOpenAC(true)
+        setIsLoading(false)
 
     }
     const closeAutoComplete = () => {
@@ -257,13 +168,17 @@ function Search(props) {
             .catch(e => console.log(e))
     }
 
-    const submitForm = async() => {
-        let url = proxy + 'getDets?keyWord=' + keyWordInput +'&&distance=' + (parseInt(distance * 1609.344)) + '&&category=' + category +'&&locationLat=' + longLat.lat + '&&locationLong=' + longLat.lng
+    const submitForm = async (event) => {
+        if(showCard){
+            setCardDetails(false);
+            setBusinesses([]);
+        }
+        let url = proxy + 'getDets?keyWord=' + kW + '&&distance=' + (parseInt((distance?distance:0) * 1609.344)) + '&&category=' + category + '&&locationLat=' + longLat.lat + '&&locationLong=' + longLat.lng
         await fetch(url, getAPIObject)
             .then((response) => {
                 return response.json()
             }).then((res) => {
-                if (res&& res.data && res.data.businesses) {
+                if (res && res.data && res.data.businesses) {
                     console.log(res.data)
                     setBusinesses(res.data.businesses)
                     setShowTabel(true)
@@ -272,27 +187,36 @@ function Search(props) {
             }).catch((exception) => {
                 console.log(exception);
             });
+
+
     }
-    const clearForm = () => { 
+    const onSubmitForm = (event) => {
+        event.preventDefault();
+        // event.stopPropagation();
+    }
+    const clearForm = () => {
+        ref.current?.clear()
         setShowCard(false)
         setShowTabel(false)
         setBusinesses([])
         setAutoDetectLocation(false)
         setkeyWord({})
-        setkeyWordInput('')
+        setkW('')
+        setkeyWordInput({})
         setOpenAC(false)
         setKeyWordOptions([])
         setCategory('all')
-        setDistance()
+        setDistance('')
         setLocation('')
-        setLongLat({lat:'',lng:''})
+        setLongLat({ lat: '', lng: '' })
         setAutoDetectLocation(false)
         setCardDetails({})
+        console.log(keyWord, keyWordInput)
     }
 
-    const onRowClick = async(id)=>{
+    const onRowClick = async (id) => {
         console.log(id)
-        let url = proxy+'getBusinessDets?id=' + id;
+        let url = proxy + 'getBusinessDets?id=' + id;
         await fetch(url, getAPIObject)
             .then((response) => {
                 console.log(response);
@@ -308,52 +232,59 @@ function Search(props) {
             }).catch((exception) => {
                 console.log(exception);
             });
-            let url2 = proxy+'getBusinessReviews?id=' + id;
-            await fetch(url2, getAPIObject)
-                .then((response) => {
-                    console.log(response);
-                    return response.json()
-                }).then((data) => {
-                    console.log(data);
-                    if (data&& data.data&&data.data.reviews) {
-                        setReviews(data.data.reviews)
-                    }
-                    else throw ('no businesses details found')
-                }).catch((exception) => {
-                    console.log(exception);
-                });
+        let url2 = proxy + 'getBusinessReviews?id=' + id;
+        await fetch(url2, getAPIObject)
+            .then((response) => {
+                console.log(response);
+                return response.json()
+            }).then((data) => {
+                console.log(data);
+                if (data && data.data && data.data.reviews) {
+                    setReviews(data.data.reviews)
+                }
+                else throw ('no businesses details found')
+            }).catch((exception) => {
+                console.log(exception);
+            });
     }
 
-    const backBtnClick =()=>{
+    const backBtnClick = () => {
         setShowCard(false)
         setShowTabel(true)
     }
-    return (<div className='col-12'>
+    return (<div className=''>
         <div className='search-page container-1 row'>
-        <Header nav='search' />
-            <div className='search-form-cnt col-md-10'>
-                <div className='form'>
+            <Header nav='search' />
+            <div className='search-form-cnt col-md-10' >
+                <Form className='form' onSubmit={onSubmitForm} >
                     <p className='form-title'>Business search</p>
                     <div className='search-form'>
                         <div className='row dist-cat-row'>
                             <div className="col-12">
                                 <label className=''>Keyword <span className='req'>*</span></label>
-                                <Autocomplete
-                                    disablePortal
-                                    getOptionLabel={(option) => option.label}
-                                    id='auto-complete-keyword'
+                                <AsyncTypeahead
+                                    filterBy={() => true}
+                                    id="async-example"
+                                    isLoading={isLoading}
+                                    required
+                                    minLength={3}
+                                    inputProps={{
+                                        required: true,
+                                        val: 'ei'
+                                    }}
+                                    ref={ref}
+                                    onInputChange={(keyword,e) => formChange(e,'autoCompInput',keyword)}
+                                    onChange={(keyword,e) => formChange(e,'keyWordAutoComplete',keyword[0])}
+                                    onSearch={getOptionsList}
                                     options={keyWordOptions}
-                                    filterOptions={(x) => x}
-                                    autoComplete
-                                    open={openAC}
-                                    filterSelectedOptions
-                                    value={keyWord}
-                                    name='keyWordAutoCmp'
-                                    renderInput={(params) => <TextField {...params} className='key-word' name='keyWord' label='' />}
-                                    onChange={(e, seletedValue) => { formChange(e, "keyWordAutoComplete", seletedValue) }}
-                                    onInputChange={(e, enteredVal) => formChange(e, 'autoCompInput', enteredVal)}
-                                    onBlur={closeAutoComplete}
+                                    searchText={<Spinner variant="dark" animation="border" />}
+                                    renderMenuItemChildren={(option) => (
+                                        <>
+                                            <span>{option.label}</span>
+                                        </>
+                                    )}
                                 />
+
                             </div>
                         </div>
 
@@ -362,27 +293,35 @@ function Search(props) {
                                 <div className='row dist-cat-row'>
                                     <div className='colmn  col-md-6'>
                                         <label>Distance</label>
-                                        <TextField placeholder='10'
+                                        <Form.Control type="number" placeholder="10" value={distance}
+                                            id='distance'
+                                            className='dist'
+                                            onChange={(e, val) => formChange(e, 'distance', val)} />
+                                        {/* <TextField placeholder='10'
                                             value={distance}
                                             id='distance'
                                             type="number"
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                             className='dist'
-                                            onChange={(e, val) => formChange(e, 'distance', val)} />
+                                            onChange={(e, val) => formChange(e, 'distance', val)}
+                                        // required
+                                        /> */}
                                     </div>
                                     <div className='colmn col-md-6'>
                                         <label className=''>Category <span className='req'>*</span></label>
-                                        <Select
+                                        <Form.Select
+                                            required
                                             className='category-select'
                                             value={category}
+                                            variant='lightx'
                                             onChange={(e, val) => formChange(e, 'category', val)}>
-                                            <MenuItem value={'all'}>Default</MenuItem>
-                                            <MenuItem value={'art-entertainment'}>Arts & Entertainment</MenuItem>
-                                            <MenuItem value={'health'}>Health & Medical</MenuItem>
-                                            <MenuItem value={'hotelstravel'}>Hotels & Travel</MenuItem>
-                                            <MenuItem value={'food'}>Food</MenuItem>
-                                            <MenuItem value={'professional'}>Professional Services</MenuItem>
-                                        </Select>
+                                            <option value={'all'}>Default</option>
+                                            <option value={'art-entertainment'}>Arts & Entertainment</option>
+                                            <option value={'health'}>Health & Medical</option>
+                                            <option value={'hotelstravel'}>Hotels & Travel</option>
+                                            <option value={'food'}>Food</option>
+                                            <option value={'professional'}>Professional Services</option>
+                                        </Form.Select>
                                     </div>
                                 </div>
                             </div>
@@ -390,19 +329,25 @@ function Search(props) {
 
                         <div className=' colmn col-12'>
                             <div className='colmn loc-inp'><label className=''>Location <span className='req'>*</span></label>
-                                <TextField
+                                <Form.Control
                                     value={location}
                                     id='location'
+                                    className="rbt rbt-input-main form-control rbt-input"
+                                    required={longLat.lat.length <= 0}
                                     onChange={(e, val) => { formChange(e, 'location', val) }}
                                     disabled={autoDetectLocation}
                                     onBlur={getLocation}
-                                ></TextField>
+                                ></Form.Control>
                             </div>
-                            <div className='row-align'> <Checkbox value={autoDetectLocation} onChange={(e, val) => { formChange(e, 'checkbox', val) }} /><label>Auto-detect my location</label></div>
+                            <div className='row-align'>
+                                <Checkbox checked={autoDetectLocation}
+                                    onChange={(e, val) => { formChange(e, 'checkbox', val) }} />
+                                <label>Auto-detect my location</label>
+                            </div>
                         </div>
 
                         <div className='center-btns'>
-                            <Button variant="danger" className='form-btn' onClick={submitForm} >
+                            <Button variant="danger" type='submit' className='form-btn' onClick={submitForm} >
                                 Submit
                             </Button>
                             <Button variant="primary" className='form-btn' onClick={clearForm}>
@@ -410,11 +355,14 @@ function Search(props) {
                             </Button>
                         </div>
                     </div>
-                </div>
+                </Form>
             </div>
-        
-        {showTabel&& <BusinessTabel businesses={businesses} onRowClick={onRowClick}/>}
-        {showCard && <BusinessCard cardDetails ={cardDetails} reviews= {reviews} onBackClick={backBtnClick}/>}
+
+            {showTabel && <BusinessTabel businesses={businesses} onRowClick={onRowClick} />}
+            {showCard && <BusinessCard
+                cardDetails={cardDetails}
+                reviews={reviews}
+                onBackClick={backBtnClick} />}
         </div>
     </div>)
 }

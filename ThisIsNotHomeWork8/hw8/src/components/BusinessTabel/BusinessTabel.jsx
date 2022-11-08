@@ -28,7 +28,9 @@ const BusinessTabel = (props) => {
         </Table>
     </div>
     </>:<>
-    {/* TODO: No results table */}
+    <div className='btn-row'>
+      <div className='no-res'>No results available</div>
+    </div>
     </>)
 }
 export default BusinessTabel

@@ -66,7 +66,7 @@
 #auto-complete-keyword,
 #distance,
 #location {
-    height: 10px;
+    /* height: 10px; */
 }
 
 #auto-complete-keyword{
@@ -79,7 +79,7 @@
     background-color: rgba(235, 230, 230, 0.73);
 }
 .category-select{
-    height: 54%;
+    /* height: 54%; */
     width: 80%;
 }
 .dist-cat-row {
