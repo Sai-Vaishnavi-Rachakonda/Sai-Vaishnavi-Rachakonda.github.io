@@ -11,7 +11,7 @@ import { Form, InputGroup, Spinner } from 'react-bootstrap';
 
 function Search(props) {
 
-    const proxy = "http://localhost:8080/"
+    const proxy = "https://node-react-project-365904.wl.r.appspot.com/"
     const [keyWord, setkeyWord] = useState();
     const [kW, setkW] = useState();
     const [keyWordInput, setkeyWordInput] = useState();
