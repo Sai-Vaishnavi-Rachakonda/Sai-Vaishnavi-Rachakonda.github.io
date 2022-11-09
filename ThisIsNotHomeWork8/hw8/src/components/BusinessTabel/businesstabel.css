@@ -1,41 +1,57 @@
-.business-tabel-cnt{
-     width: 100%;
-     display: flex;
-     flex-direction: column;
-     justify-content: center;
-     align-items: center;
+.business-tabel-cnt {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.tab-cnt{
+.tab-cnt {
     background-color: white;
     width: 80%!important;
     text-align: center;
     border-radius: 10px;
 }
 
-.tab-ind{
+.tab-ind {
     text-align: left;
     padding-left: 2.5% !important;
 
 }
-.tab-img-td{
+
+.tab-img-td {
     height: 100px;
     width: 100px;
 }
-.row-image{
-    height: 100px;
-    width: 100px;
+
+.row-image {
+    height: 100%;
+    width: 100%;
 }
-.width-1{
+
+.width-1 {
     width: 12.5%;
 }
-.width-2{
+
+.width-2 {
     width: 25%;
 }
-.width-3{
+
+.width-3 {
     width: 37.5%;
 }
-.booking-index{
+
+.booking-index {
     font-weight: bold;
     padding-left: 1em !important;
+}
+
+@media only screen and (max-width: 600px) {
+    .row-image {
+        height: 75%;
+        width: 100%;
+    }
+    .tab-cnt {
+        width: 100% !important;
+    }
 }

@@ -169,39 +169,39 @@ const BusinessCard = (props) => {
                 transition={true}
             >
                 {/* TODO: add checks */}
-                <Tab eventKey="busDets" title="Business Details" >
+                <Tab eventKey="busDets" title="Business Details" className='tab-13' >
                     <div className='business-details row'>
-                        {address && <div class="col-6">
+                        {address && <div class="col-md-6 col-sm-12">
                             <span class="block-header">Address</span>
                             <div class="block-content">
                                 <span class={''}>{address}</span>
                             </div>
                         </div>}
-                        {category && <div class="col-6">
+                        {category && <div class="col-md-6 col-sm-12">
                             <span class="block-header">Category</span>
                             <div class="block-content">
                                 <span class={''}>{category}</span>
                             </div>
                         </div>}
-                        {phone && <div class="col-6">
+                        {phone && <div class="col-md-6 col-sm-12">
                             <span class="block-header">Phone</span>
                             <div class="block-content">
                                 <span class={''}>{phone}</span>
                             </div>
                         </div>}
-                        {price && <div class="col-6">
+                        {price && <div class="col-md-6 col-sm-12">
                             <span class="block-header">Price range</span>
                             <div class="block-content">
                                 <span class={''}>{price}</span>
                             </div>
                         </div>}
-                        <div class="col-6">
+                        <div class="col-md-6 col-sm-12">
                             <span class="block-header">Status</span>
                             <div class="block-content">
                                 <span class={status ? 'green' : 'red'}>{status ? "Open Now" : "Closed"}</span>
                             </div>
                         </div>
-                        {url && <div class="col-6">
+                        {url && <div class="col-md-6 col-sm-12">
                             <span class="block-header">Visit Yelp for more</span>
                             <div class="block-content">
                                 <a href={url} target="blank">Business Link</a>
@@ -235,9 +235,9 @@ const BusinessCard = (props) => {
                         </Carousel>}
                     </div>
                 </Tab>
-                <Tab eventKey="map" title="Map location">
+                <Tab eventKey="map" title="Map location" className='tab-13'>
                     <Map position={position} />           </Tab>
-                <Tab eventKey="review" title="Reviews" >
+                <Tab eventKey="review" title="Reviews" className='tab-13'>
                     <Reviews reviews={props.reviews} />
                 </Tab>
             </Tabs>

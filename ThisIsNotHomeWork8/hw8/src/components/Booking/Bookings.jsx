@@ -23,7 +23,7 @@ function Bookings(props) {
                 <h4>List of your Reservations</h4>
                 {arr.length > 0 ? <>
                     <br></br>
-                    <Table className='booking-tab-cnt'>
+                    <Table className='booking-tab-cnt' size='sm'>
                         <thead>
                             <tr>
                                 <th className='tab-ind'>#</th>

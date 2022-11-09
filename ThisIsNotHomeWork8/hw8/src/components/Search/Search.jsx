@@ -2,16 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Header from '../Header/Header';
 import './search.css';
-import { Checkbox} from '@mui/material';
+import { Checkbox } from '@mui/material';
 import BusinessTabel from '../BusinessTabel/BusinessTabel';
 import BusinessCard from '../BusinessCard/BusinessCard';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
-import { Form, InputGroup, Spinner } from 'react-bootstrap';
+import { Form, Spinner } from 'react-bootstrap';
 
 
 function Search(props) {
 
-    const proxy = "https://node-react-project-365904.wl.r.appspot.com/"
+    // const proxy = "https://node-react-project-365904.wl.r.appspot.com/"
+    const proxy = "http://localhost:8080/"
     const [keyWord, setkeyWord] = useState();
     const [kW, setkW] = useState();
     const [keyWordInput, setkeyWordInput] = useState();
@@ -43,10 +44,6 @@ function Search(props) {
                 {
                     //if enter is pressed we have to close the dd and set value
                     setkeyWordInput(value);
-                   
-                    if (value.length > 2) {
-                        await getOptionsList(value)
-                    }
                     break;
                 }
             case 'keyWordAutoComplete':
@@ -95,6 +92,9 @@ function Search(props) {
         },
     };
     const getOptionsList = async (val) => {
+        console.log(val)
+        setkeyWordInput(val);
+        setkW(val)
         setIsLoading(true);
         const url = proxy + 'getOptionsList?text=' + val
         await fetch(url, getAPIObject).then(res => {
@@ -127,8 +127,7 @@ function Search(props) {
     }
 
     const getLocation = async () => {
-        const apiKey = 'AIzaSyDGDvD0izXPSz_65z-iZyznuyDlU-D0Qz0'
-        const addressURL = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + apiKey;
+        const addressURL = proxy+'getLcation?location=' + location;
         await fetch(addressURL, getAPIObject)
             .then(res => {
                 if (res && res.status === 200)
@@ -136,9 +135,9 @@ function Search(props) {
                 else throw ('There was an error fetching long and lat')
             }
             ).then(data => {
-                // console.log(data.results[0].geometry.location)
-                if (data && data.results && data.results[0] && data.results[0].geometry && data.results[0].geometry.location)
-                    setLongLat(data.results[0].geometry.location)
+                console.log(data)
+                if (data && data.data.results && data.data.results[0] && data.data.results[0].geometry && data.data.results[0].geometry.location)
+                    setLongLat(data.data.results[0].geometry.location)
                 else
                     throw ('data from google api is missing')
             }).catch(e => console.log(e))
@@ -169,11 +168,12 @@ function Search(props) {
     }
 
     const submitForm = async (event) => {
-        if(showCard){
-            setCardDetails(false);
+        if (showCard) {
+            setCardDetails({});
             setBusinesses([]);
+            setShowCard(false)
         }
-        let url = proxy + 'getDets?keyWord=' + kW + '&&distance=' + (parseInt((distance?distance:0) * 1609.344)) + '&&category=' + category + '&&locationLat=' + longLat.lat + '&&locationLong=' + longLat.lng
+        let url = proxy + 'getDets?keyWord=' + kW + '&&distance=' + (parseInt((distance ? distance : 0) * 1609.344)) + '&&category=' + category + '&&locationLat=' + longLat.lat + '&&locationLong=' + longLat.lng
         await fetch(url, getAPIObject)
             .then((response) => {
                 return response.json()
@@ -183,7 +183,12 @@ function Search(props) {
                     setBusinesses(res.data.businesses)
                     setShowTabel(true)
                 }
-                else throw ('no businesses data array found')
+                else {
+                    if(res.data&&res.data.error){
+                        alert(res.data.error.description)
+                    }
+                    throw ('no businesses data array found')
+                }
             }).catch((exception) => {
                 console.log(exception);
             });
@@ -255,7 +260,7 @@ function Search(props) {
     return (<div className=''>
         <div className='search-page container-1 row'>
             <Header nav='search' />
-            <div className='search-form-cnt col-md-10' >
+            <div className='search-form-cnt col-md-6 col-sm-8' >
                 <Form className='form' onSubmit={onSubmitForm} >
                     <p className='form-title'>Business search</p>
                     <div className='search-form'>
@@ -270,20 +275,23 @@ function Search(props) {
                                     minLength={3}
                                     inputProps={{
                                         required: true,
-                                        val: 'ei'
                                     }}
                                     ref={ref}
-                                    onInputChange={(keyword,e) => formChange(e,'autoCompInput',keyword)}
-                                    onChange={(keyword,e) => formChange(e,'keyWordAutoComplete',keyword[0])}
+                                    labelKey="label"
+                                    // onInputChange={(keyword, e) => formChange(e, 'autoCompInput', keyword)}
+                                    onChange={(keyword, e) => formChange(e, 'keyWordAutoComplete', keyword[0])}
                                     onSearch={getOptionsList}
                                     options={keyWordOptions}
-                                    searchText={<Spinner variant="dark" animation="border" />}
+                                    searchText={<Spinner
+                                        className='zIndex'
+                                        size="sm"
+                                        variant="dark" animation="border" />}
                                     renderMenuItemChildren={(option) => (
                                         <>
                                             <span>{option.label}</span>
                                         </>
                                     )}
-                                />
+                                ></AsyncTypeahead>
 
                             </div>
                         </div>
@@ -297,15 +305,6 @@ function Search(props) {
                                             id='distance'
                                             className='dist'
                                             onChange={(e, val) => formChange(e, 'distance', val)} />
-                                        {/* <TextField placeholder='10'
-                                            value={distance}
-                                            id='distance'
-                                            type="number"
-                                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                            className='dist'
-                                            onChange={(e, val) => formChange(e, 'distance', val)}
-                                        // required
-                                        /> */}
                                     </div>
                                     <div className='colmn col-md-6'>
                                         <label className=''>Category <span className='req'>*</span></label>
@@ -313,7 +312,7 @@ function Search(props) {
                                             required
                                             className='category-select'
                                             value={category}
-                                            variant='lightx'
+                                            variant='light'
                                             onChange={(e, val) => formChange(e, 'category', val)}>
                                             <option value={'all'}>Default</option>
                                             <option value={'art-entertainment'}>Arts & Entertainment</option>

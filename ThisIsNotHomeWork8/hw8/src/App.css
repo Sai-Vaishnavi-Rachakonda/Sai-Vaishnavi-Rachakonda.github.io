@@ -2,8 +2,8 @@
   height: 100vh;
   width: 100vw;
   position: relative;
-  background: rgb(255,255,255);
-  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(0,106,255,0.279171043417367) 100%);
+  background: rgb(255, 255, 255);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(0, 106, 255, 0.279171043417367) 100%);
 }
 
 .bg-img {
@@ -49,9 +49,31 @@
   background: white;
   color: red;
   text-align: center;
-  height: 4vh;
+  /* height: 4vh; */
   font-size: 1.25em;
   border-radius: 20px;
   vertical-align: middle;
   margin-top: 2em;
+}
+
+.zIndex {
+  z-index: 999;
+  width: 2vw;
+  height: 5vw;
+}
+
+@media only screen and (max-width: 600px) {
+  .bg-img {
+    height: 100vh;
+    width: 100vw;
+    object-fit: cover;
+    object-position: 55% 105%;
+    z-index: -100;
+    position: absolute;
+  }
+
+  .no-res {
+    padding: 4%;
+    width: 80%;
+  }
 }

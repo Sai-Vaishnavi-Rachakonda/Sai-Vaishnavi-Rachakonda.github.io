@@ -63,6 +63,22 @@ app.get("/getBusinessReviews", (req, res) => {
   });
 
 });
+app.get("/getLcation", (req, res) => {
+  let location= req.query.location;
+  // console.log(id)
+  const apiKey = 'AIzaSyDGDvD0izXPSz_65z-iZyznuyDlU-D0Qz0'
+  const addressURL = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + apiKey;
+  const apiCall = {
+    url: addressURL,
+    // headers: { "Authorization": "Bearer " + key }
+  };
+  request(apiCall, (err, resp, body) => {
+    // console.log(resp)
+    res.json({data:JSON.parse(body),error:err,resp:resp})
+  });
+
+});
+
 
 app.use(express.static(path.resolve(__dirname, 'build')));
 
