@@ -11,8 +11,8 @@ import { Form, Spinner } from 'react-bootstrap';
 
 function Search(props) {
 
-    const proxy = "https://node-react-project-365904.wl.r.appspot.com/"
-    // const proxy = "http://localhost:8080/"
+    // const proxy = "https://node-react-project-365904.wl.r.appspot.com/"
+    const proxy = "http://localhost:8080/"
     const [keyWord, setkeyWord] = useState();
     const [kW, setkW] = useState();
     const [keyWordInput, setkeyWordInput] = useState();
@@ -173,7 +173,7 @@ function Search(props) {
             setBusinesses([]);
             setShowCard(false)
         }
-        let url = proxy + 'getDets?keyWord=' + kW + '&&distance=' + (parseInt((distance ? distance : 0) * 1609.344)) + '&&category=' + category + '&&locationLat=' + longLat.lat + '&&locationLong=' + longLat.lng
+        let url = proxy + 'getDets?keyWord=' + kW + '&&distance=' + (parseInt((distance ? distance : 0) * 1609.344)) + '&&category=' + category +'&&location='+location +'&&locationLat=' + longLat.lat + '&&locationLong=' + longLat.lng
         await fetch(url, getAPIObject)
             .then((response) => {
                 return response.json()
@@ -332,10 +332,10 @@ function Search(props) {
                                     value={location}
                                     id='location'
                                     className="rbt rbt-input-main form-control rbt-input"
-                                    required={longLat.lat.length <= 0}
+                                    required={longLat.lat.length <= 0||location.length<=0}
                                     onChange={(e, val) => { formChange(e, 'location', val) }}
                                     disabled={autoDetectLocation}
-                                    onBlur={getLocation}
+                                    // onBlur={getLocation}
                                 ></Form.Control>
                             </div>
                             <div className='row-align'>
