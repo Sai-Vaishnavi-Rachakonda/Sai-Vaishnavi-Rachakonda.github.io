@@ -11,8 +11,8 @@ import { Form, Spinner } from 'react-bootstrap';
 
 function Search(props) {
 
-    // const proxy = "https://node-react-project-365904.wl.r.appspot.com/"
-    const proxy = "http://localhost:8080/"
+    const proxy = "https://node-react-project-365904.wl.r.appspot.com/"
+    // const proxy = "http://localhost:8080/"
     const [keyWord, setkeyWord] = useState();
     const [kW, setkW] = useState();
     const [keyWordInput, setkeyWordInput] = useState();
@@ -168,6 +168,7 @@ function Search(props) {
     }
 
     const submitForm = async (event) => {
+        if(kW.length>0&&(location.length>0||longLat.lat!='') ){
         if (showCard) {
             setCardDetails({});
             setBusinesses([]);
@@ -192,12 +193,12 @@ function Search(props) {
             }).catch((exception) => {
                 console.log(exception);
             });
-
+        }
 
     }
     const onSubmitForm = (event) => {
         event.preventDefault();
-        // event.stopPropagation();
+        event.stopPropagation();
     }
     const clearForm = () => {
         ref.current?.clear()
