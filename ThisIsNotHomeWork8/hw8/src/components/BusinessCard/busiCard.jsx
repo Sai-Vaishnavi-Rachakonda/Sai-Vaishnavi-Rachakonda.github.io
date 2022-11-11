@@ -15,7 +15,7 @@ import Reviews from './Reviews';
 
 
 const BusinessCard = (props) => {
-    console.log(props)
+    // console.log(props)
     const { cardDetails: data } = props
     const [showModal, setShowModal] = useState(false)
     const [validated, setValidated] = useState(false)
@@ -41,7 +41,7 @@ const BusinessCard = (props) => {
             setReserved(true)
         else
             setReserved(false)
-        console.log(ls)
+        // console.log(ls)
     })
     const closeModal = () => {
         if (showModal) {
@@ -133,7 +133,7 @@ const BusinessCard = (props) => {
             }
             default:
                 {
-                    console.log(e, e.target.value, name1)
+                    // console.log(e, e.target.value, name1)
                     break;
                 }
         }

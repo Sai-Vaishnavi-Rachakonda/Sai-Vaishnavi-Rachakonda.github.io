@@ -34,7 +34,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{p:1}}>
+        <Box sx={{ p: 1 }}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -60,7 +60,6 @@ export default function BusinessCard(props) {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
 
-  console.log('called')
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -92,7 +91,7 @@ export default function BusinessCard(props) {
       setReserved(true)
     else
       setReserved(false)
-    console.log(ls)
+    // console.log(ls)
   })
   const closeModal = () => {
     if (showModal) {
@@ -247,42 +246,51 @@ export default function BusinessCard(props) {
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
             <div className='business-details row'>
-              {address && <div class="col-md-6 col-sm-12">
-                <span class="block-header">Address</span>
-                <div class="block-content">
-                  <span class={''}>{address}</span>
-                </div>
-              </div>}
-              {category && <div class="col-md-6 col-sm-12">
-                <span class="block-header">Category</span>
-                <div class="block-content">
-                  <span class={''}>{category}</span>
-                </div>
-              </div>}
-              {phone && <div class="col-md-6 col-sm-12">
-                <span class="block-header">Phone</span>
-                <div class="block-content">
-                  <span class={''}>{phone}</span>
-                </div>
-              </div>}
-              {price && <div class="col-md-6 col-sm-12">
-                <span class="block-header">Price range</span>
-                <div class="block-content">
-                  <span class={''}>{price}</span>
-                </div>
-              </div>}
-              <div class="col-md-6 col-sm-12">
-                <span class="block-header">Status</span>
-                <div class="block-content">
-                  <span class={status ? 'green' : 'red'}>{status ? "Open Now" : "Closed"}</span>
+              <div className='row'>
+              <div className='col-md-6 col-sm-12'>
+                {address && <div class="row">
+                  <span class="block-header">Address</span>
+                  <div class="block-content">
+                    <span class={''}>{address}</span>
+                  </div>
+                </div>}
+                {phone && <div class="row">
+                  <span class="block-header">Phone</span>
+                  <div class="block-content">
+                    <span class={''}>{phone}</span>
+                  </div>
+                </div>}
+                <div class="row">
+                  <span class="block-header">Status</span>
+                  <div class="block-content">
+                    <span class={status ? 'green' : 'red'}>{status ? "Open Now" : "Closed"}</span>
+                  </div>
                 </div>
               </div>
-              {url && <div class="col-md-6 col-sm-12">
-                <span class="block-header">Visit Yelp for more</span>
-                <div class="block-content">
-                  <a href={url} target="blank">Business Link</a>
-                </div>
-              </div>}
+
+              <div className='col-md-6 col-sm-12'>
+                {category && <div class="row">
+                  <span class="block-header">Category</span>
+                  <div class="block-content">
+                    <span class={''}>{category}</span>
+                  </div>
+                </div>}
+
+                {price && <div class="row">
+                  <span class="block-header">Price range</span>
+                  <div class="block-content">
+                    <span class={''}>{price}</span>
+                  </div>
+                </div>}
+
+                {url && <div class="row">
+                  <span class="block-header">Visit Yelp for more</span>
+                  <div class="block-content">
+                    <a href={url} target="blank">Business Link</a>
+                  </div>
+                </div>}
+              </div>
+              </div>
               <div className='btn-row row'>
                 {!reserved ? <Button variant="danger" className='reserve-btn' onClick={() => { setShowModal(true) }}>
                   Reserve Now
@@ -299,8 +307,8 @@ export default function BusinessCard(props) {
                   <FontAwesomeIcon icon={faSquareFacebook} className='share-icon facebook' />
                 </a>
               </div>
-              {photos.length > 0 && <Carousel variant="dark" className='' ride>
-                {photos.map(photo => (<Carousel.Item interval={1000000}>
+              {photos.length > 0 && <Carousel variant="dark" className='' interval={1000}>
+                {photos.map(photo => (<Carousel.Item>
                   <div className='btn-row'>
                     <img
                       className="card-img"
@@ -371,7 +379,6 @@ export default function BusinessCard(props) {
                       required className='col-3 padd-right-5'
                       onChange={(e) => { formChange(e, 'timeMins') }}
                       value={timeMins}
-
                     ><option value={''}>{''}</option>
                       {arr60.map((val, index) => (<option value={val}>{val}</option>))}</Form.Select>
                     <FontAwesomeIcon icon={faClockFour} className='padd-left' />

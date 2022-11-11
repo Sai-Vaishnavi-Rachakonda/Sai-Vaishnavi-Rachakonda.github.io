@@ -33,12 +33,12 @@ function Search(props) {
 
 
     useEffect(() => {
-        console.log(location, autoDetectLocation, longLat)
+        // console.log(location, autoDetectLocation, longLat)
     }, [location, autoDetectLocation, longLat])
 
 
     const formChange = async (e, name, value) => {
-        console.log(name, value, e)
+        // console.log(name, value, e)
         switch (name) {
             case 'autoCompInput':
                 {
@@ -92,7 +92,7 @@ function Search(props) {
         },
     };
     const getOptionsList = async (val) => {
-        console.log(val)
+        // console.log(val)
         setkeyWordInput(val);
         setkW(val)
         setIsLoading(true);
@@ -104,9 +104,9 @@ function Search(props) {
         }).then(res => {
             let data = res.data
             let options = []
-            if (data.businesses && data.businesses.length > 0) {
-                data.businesses.map((option, ind) => options.push({ label: option.title, id: ind }))
-            }
+            // if (data.businesses && data.businesses.length > 0) {
+            //     data.businesses.map((option, ind) => options.push({ label: option.title, id: ind }))
+            // }
             if (data.categories && data.categories.length > 0) {
                 data.categories.map((option, ind) => options.push({ label: option.title, id: ind }))
             }
@@ -135,7 +135,7 @@ function Search(props) {
                 else throw ('There was an error fetching long and lat')
             }
             ).then(data => {
-                console.log(data)
+                // console.log(data)
                 if (data && data.data.results && data.data.results[0] && data.data.results[0].geometry && data.data.results[0].geometry.location)
                     setLongLat(data.data.results[0].geometry.location)
                 else
@@ -152,7 +152,7 @@ function Search(props) {
                 else throw ('There was an error fetching long and lat')
             }
             ).then(data => {
-                console.log(data)
+                // console.log(data)
                 if (data && data.loc) {
                     const { loc } = data
                     setLongLat({
@@ -180,7 +180,7 @@ function Search(props) {
                 return response.json()
             }).then((res) => {
                 if (res && res.data && res.data.businesses) {
-                    console.log(res.data)
+                    // console.log(res.data)
                     setBusinesses(res.data.businesses)
                     setShowTabel(true)
                 }
@@ -217,18 +217,18 @@ function Search(props) {
         setLongLat({ lat: '', lng: '' })
         setAutoDetectLocation(false)
         setCardDetails({})
-        console.log(keyWord, keyWordInput)
+        // console.log(keyWord, keyWordInput)
     }
 
     const onRowClick = async (id) => {
-        console.log(id)
+        // console.log(id)
         let url = proxy + 'getBusinessDets?id=' + id;
         await fetch(url, getAPIObject)
             .then((response) => {
-                console.log(response);
+                // console.log(response);
                 return response.json()
             }).then((data) => {
-                console.log(data);
+                // console.log(data);
                 if (data) {
                     setCardDetails(data.data)
                     setShowTabel(false)
@@ -241,10 +241,10 @@ function Search(props) {
         let url2 = proxy + 'getBusinessReviews?id=' + id;
         await fetch(url2, getAPIObject)
             .then((response) => {
-                console.log(response);
+                // console.log(response);
                 return response.json()
             }).then((data) => {
-                console.log(data);
+                // console.log(data);
                 if (data && data.data && data.data.reviews) {
                     setReviews(data.data.reviews)
                 }
@@ -314,6 +314,7 @@ function Search(props) {
                                             className='category-select'
                                             value={category}
                                             variant='light'
+                                            style={{ backgroundImage:`url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3e%3cpath fill=%27none%27 stroke=%27%23343a40%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%272%27 d=%27m2 5 6 6 6-6%27/%3e%3c/svg%3e")` }}
                                             onChange={(e, val) => formChange(e, 'category', val)}>
                                             <option value={'all'}>Default</option>
                                             <option value={'art-entertainment'}>Arts & Entertainment</option>

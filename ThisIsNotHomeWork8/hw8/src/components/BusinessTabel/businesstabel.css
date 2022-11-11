@@ -48,10 +48,14 @@
 
 @media only screen and (max-width: 600px) {
     .row-image {
+        width: 18vw;
         height: 75%;
-        width: 100%;
     }
     .tab-cnt {
         width: 100% !important;
+    }
+    .business-tabel-cnt {
+        font-size: 0.8rem;
+
     }
 }

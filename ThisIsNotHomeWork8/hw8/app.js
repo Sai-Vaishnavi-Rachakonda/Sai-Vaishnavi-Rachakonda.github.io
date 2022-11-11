@@ -41,7 +41,7 @@ app.get("/getDets", (req, res) => {
   let locationLat = req.query.locationLat;
   let locationLong = req.query.locationLong;
   let location = req.query.location;
-  console.log(keyWord, distance, category, locationLat, locationLong, location);
+  // console.log(keyWord, distance, category, locationLat, locationLong, location);
   const apiKey = 'AIzaSyDGDvD0izXPSz_65z-iZyznuyDlU-D0Qz0'
   const addressURL = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + apiKey;
   if (locationLat.length <= 0 && location.length > 0) {
@@ -58,7 +58,7 @@ app.get("/getDets", (req, res) => {
       };
       return getRequest(apiCall);
     }).then(function (body2) {
-      console.log(body2);
+      // console.log(body2);
       res.json({ data: JSON.parse(body2) })
     })
   }

@@ -1,7 +1,6 @@
 import { Loader } from '@googlemaps/js-api-loader';
 
 function Map (props){
-    console.log(props)
     const apiKey = "AIzaSyDWwSl6QStmBq1A0Bx8WbOD-TY3ml9imBc"
 
 const loader = new Loader({
