@@ -63,7 +63,7 @@ app.get("/getBusinessReviews", (req, res) => {
   });
 
 });
-app.get("/getLcation", (req, res) => {
+app.get("/getLocation", (req, res) => {
   let location= req.query.location;
   // console.log(id)
   const apiKey = 'AIzaSyDGDvD0izXPSz_65z-iZyznuyDlU-D0Qz0'
@@ -76,7 +76,6 @@ app.get("/getLcation", (req, res) => {
     // console.log(resp)
     res.json({data:JSON.parse(body),error:err,resp:resp})
   });
-
 });
 
 

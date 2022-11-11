@@ -9,7 +9,7 @@
 
 .card-dets {
     background-color: white;
-    width: 80% !important;
+    width: 75% !important;
     text-align: center;
     border-radius: 10px;
     margin-bottom: 2em !important;
@@ -205,20 +205,31 @@
     animation-iteration-count: 1;
     animation-direction: alternate;
 }
-@keyframes slidein {
-  from {
-    margin-left: 0.5vw;
-    width: 100%;
-  }
 
-  to {
-    margin-left: 0%;
-    width: 100%;
-  }
+@keyframes slidein {
+    from {
+        margin-left: 0.5vw;
+        width: 100%;
+    }
+
+    to {
+        margin-left: 0%;
+        width: 100%;
+    }
 }
 
 @media only screen and (max-width: 600px) {
     .card-dets {
         width: 99% !important;
     }
-  }
+}
+
+@media only screen and (min-width: 600px) {
+    .MuiTabs-flexContainer {
+        justify-content: center;
+    }
+}
+
+.ptr{
+    cursor: pointer;
+}

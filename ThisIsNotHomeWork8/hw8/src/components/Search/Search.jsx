@@ -127,7 +127,7 @@ function Search(props) {
     }
 
     const getLocation = async () => {
-        const addressURL = proxy+'getLcation?location=' + location;
+        const addressURL = proxy+'getLocation?location=' + location;
         await fetch(addressURL, getAPIObject)
             .then(res => {
                 if (res && res.status === 200)
@@ -361,7 +361,8 @@ function Search(props) {
             {showCard && <BusinessCard
                 cardDetails={cardDetails}
                 reviews={reviews}
-                onBackClick={backBtnClick} />}
+                onBackClick={backBtnClick}
+                 />}
         </div>
     </div>)
 }
