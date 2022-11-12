@@ -76,6 +76,7 @@ export default function BusinessCard(props) {
   const [timeHours, setTimeHours] = useState()
   const [timeMins, setTimeMins] = useState()
   const [reserved, setReserved] = useState(false)
+  const [slides, setSlides] = useState(false)
   const getConcat = (value, seprator) => {
     let str = ''
     for (let i in value) {
@@ -149,7 +150,8 @@ export default function BusinessCard(props) {
     ls = ls.filter(x => x.name != name)
     localStorage.setItem('reservations',
       JSON.stringify({ list: [...ls] }));
-    setReserved(false)
+    setReserved(false);
+    alert('Reservation Cancelled!')
   }
   const arr24 = new Array(8).fill(9);
   const arr60 = ['00', '15', '30', '45']
@@ -208,6 +210,10 @@ export default function BusinessCard(props) {
     lng: coordinates.longitude
   }
 
+  const setSlideInterval =()=>{
+    setSlides(true)
+
+  }
   return (
     <div className='card-detail-cnt'>
       <div className='card-dets'>
@@ -307,7 +313,13 @@ export default function BusinessCard(props) {
                   <FontAwesomeIcon icon={faSquareFacebook} className='share-icon facebook' />
                 </a>
               </div>
-              {photos.length > 0 && <Carousel variant="dark" className='' interval={1000}>
+              {photos.length > 0 && <Carousel 
+              variant="dark" 
+              className='' 
+              data-ride= {false}
+              onSlide={setSlideInterval}
+              pause={false}
+              interval={slides?1000:null}>
                 {photos.map(photo => (<Carousel.Item>
                   <div className='btn-row'>
                     <img
